@@ -24,11 +24,11 @@ export async function main(ns: NS) {
 
     while (true) {
         await ns.sleep(windowTime - calculatedHackTime - gapTime);
-        const start = Date.now();
+        // const start = Date.now();
         ns.tprint(['start', server]);
         await ns.hack(server, { stock });
         ns.tprint(['done', server]);
-        calculatedHackTime = Date.now() - start;
+        // calculatedHackTime = Date.now() - start;
         await ns.sleep(2 * gapTime);
     }
 }

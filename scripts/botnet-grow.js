@@ -13,11 +13,11 @@ export async function main(ns) {
     let calculatedGrowTime = growTime;
     while (true) {
         await ns.sleep(windowTime - calculatedGrowTime - gapTime * 2);
-        const start = Date.now();
+        // const start = Date.now();
         ns.tprint(['start', server]);
         await ns.grow(server, { stock });
         ns.tprint(['done', server]);
-        calculatedGrowTime = Date.now() - start;
+        // calculatedGrowTime = Date.now() - start;
         await ns.sleep(gapTime);
     }
 }

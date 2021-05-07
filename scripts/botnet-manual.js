@@ -1,5 +1,5 @@
 import { config } from 'import.js';
-const TIME_GAP_MS = 10;
+const TIME_GAP_MS = 1000;
 const getWorkerScripts = () => ({
     weaken: `/${config.folder}/botnet-weaken.js`,
     hack: `/${config.folder}/botnet-hack.js`,
@@ -21,9 +21,9 @@ export async function main(ns) {
         grow: ns.getScriptRam(workerScripts.grow),
     };
     const maxMoney = ns.getServerMaxMoney(targetServer);
-    const hackThreads = Math.min(1, ns.hackAnalyzeThreads(targetServer, maxMoney * 0.5));
-    const growthThreads = Math.min(1, Math.ceil(ns.growthAnalyze(targetServer, 2)));
-    const weakenThreads = Math.min(1, Math.ceil(hackThreads / 25) + Math.ceil((0.004 * growthThreads) / 0.05));
+    const hackThreads = Math.max(1, Math.floor(ns.hackAnalyzeThreads(targetServer, maxMoney * 0.4)));
+    const growthThreads = Math.max(1, Math.ceil(ns.growthAnalyze(targetServer, 2)));
+    const weakenThreads = Math.max(1, Math.ceil(hackThreads / 25) + Math.ceil((0.004 * growthThreads) / 0.05));
     const hackTime = ns.getHackTime(targetServer) * 1000;
     const growTime = ns.getGrowTime(targetServer) * 1000;
     const weakenTime = ns.getWeakenTime(targetServer) * 1000;
@@ -37,13 +37,23 @@ export async function main(ns) {
     ns.scp(workerScripts.weaken, runnerServer);
     ns.scp(workerScripts.hack, runnerServer);
     ns.scp(workerScripts.grow, runnerServer);
-    ns.exec(workerScripts.grow, runnerServer, weakenThreads, ...[
+    ns.tprint({
+        hackThreads,
+        growthThreads,
+        weakenThreads,
+        hackTime,
+        growTime,
+        weakenTime,
+        windowTime,
+        totalScriptRam,
+    });
+    ns.exec(workerScripts.grow, runnerServer, growthThreads, ...[
         `--server=${targetServer}`,
         `--windowTime=${windowTime}`,
         `--growTime=${growTime}`,
         `--gapTime=${TIME_GAP_MS}`,
     ]);
-    ns.exec(workerScripts.hack, runnerServer, weakenThreads, ...[
+    ns.exec(workerScripts.hack, runnerServer, hackThreads, ...[
         `--server=${targetServer}`,
         `--windowTime=${windowTime}`,
         `--hackTime=${hackTime}`,

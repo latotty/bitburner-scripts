@@ -13,10 +13,10 @@ export async function main(ns) {
     let calculatedWeakenTime = weakenTime;
     while (true) {
         await ns.sleep(windowTime - calculatedWeakenTime);
-        const start = Date.now();
+        // const start = Date.now();
         ns.tprint(['start', server]);
         await ns.weaken(server, { stock });
         ns.tprint(['done', server]);
-        calculatedWeakenTime = Date.now() - start;
+        // calculatedWeakenTime = Date.now() - start;
     }
 }
