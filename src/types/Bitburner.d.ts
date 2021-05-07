@@ -406,7 +406,9 @@ declare module "Bitburner" {
     }
     export interface BasicHGWOptions {
         /** Number of threads to use for this function. Must be less than or equal to the number of threads the script is running with. */
-        threads: number;
+        threads?: number;
+        /** If true, the function can affect the stock market. See Player Actions Influencing Stocks */
+        stock?: boolean;
     }
 
     export interface CodingAttemptOptions {
