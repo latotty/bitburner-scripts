@@ -1,8 +1,6 @@
 import type { BitBurner as NS, Host } from 'Bitburner';
 import { config } from 'import.js';
 
-const TIME_GAP_MS = 1000;
-
 const getWorkerScripts = () => ({
     weaken: `/${config.folder}/botnet-weaken.js`,
     hack: `/${config.folder}/botnet-hack.js`,
@@ -10,12 +8,14 @@ const getWorkerScripts = () => ({
 });
 
 export async function main(ns: NS) {
-    const { runnerServer, targetServer } = ns.flags<{
+    const { runnerServer, targetServer, gapTime } = ns.flags<{
         runnerServer: Host,
         targetServer: Host,
+        gapTime: number;
     }>([
         ['runnerServer', ''],
         ['targetServer', ''],
+        ['gapTime', 1000],
     ]);
 
     if (!runnerServer || !targetServer) {
@@ -30,8 +30,7 @@ export async function main(ns: NS) {
         grow: ns.getScriptRam(workerScripts.grow),
     };
 
-    const maxMoney = ns.getServerMaxMoney(targetServer);
-    const hackThreads = Math.max(1, Math.floor(ns.hackAnalyzeThreads(targetServer, maxMoney * 0.4)));
+    const hackThreads = Math.max(1, Math.floor(40 / ns.hackAnalyzePercent(targetServer)));
     const growthThreads = Math.max(1, Math.ceil(ns.growthAnalyze(targetServer, 2)));
     const weakenThreads = Math.max(1, Math.ceil(hackThreads / 25) + Math.ceil((0.004 * growthThreads) / 0.05));
 
@@ -39,7 +38,7 @@ export async function main(ns: NS) {
     const growTime = ns.getGrowTime(targetServer) * 1000;
     const weakenTime = ns.getWeakenTime(targetServer) * 1000;
 
-    const windowTime = Math.max(hackTime + TIME_GAP_MS, growTime + TIME_GAP_MS * 2, weakenTime);
+    const windowTime = Math.max(hackTime + gapTime, growTime + gapTime * 2, weakenTime);
 
     const totalScriptRam = Math.ceil(workerScriptsRam.hack * hackThreads) + Math.ceil(workerScriptsRam.grow * growthThreads) + Math.ceil(workerScriptsRam.weaken * weakenThreads);
 
@@ -69,18 +68,18 @@ export async function main(ns: NS) {
         `--server=${targetServer}`,
         `--windowTime=${windowTime}`,
         `--growTime=${growTime}`,
-        `--gapTime=${TIME_GAP_MS}`,
+        `--gapTime=${gapTime}`,
     ]);
     ns.exec(workerScripts.hack, runnerServer, hackThreads, ...[
         `--server=${targetServer}`,
         `--windowTime=${windowTime}`,
         `--hackTime=${hackTime}`,
-        `--gapTime=${TIME_GAP_MS}`,
+        `--gapTime=${gapTime}`,
     ]);
     ns.exec(workerScripts.weaken, runnerServer, weakenThreads, ...[
         `--server=${targetServer}`,
         `--windowTime=${windowTime}`,
         `--weakenTime=${weakenTime}`,
-        `--gapTime=${TIME_GAP_MS}`,
+        `--gapTime=${gapTime}`,
     ]);
 }
