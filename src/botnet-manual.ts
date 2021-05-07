@@ -1,5 +1,5 @@
 import type { BitBurner as NS, Host } from 'Bitburner';
-import { execGrow, execWeaken, execHack, getBotnetTargetOpts } from './lib/botnet';
+import { execGrow, execWeaken, execHack, getBotnetTargetOpts } from './lib/botnet.js';
 
 export async function main(ns: NS) {
     const { runnerServer, targetServer, gapTime } = ns.flags<{

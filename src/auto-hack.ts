@@ -1,7 +1,7 @@
 import type { BitBurner as NS, Host } from 'Bitburner';
 import { config } from 'import.js';
-import { crackServer } from './lib/crack-server';
-import { walkServer, WalkServerProcessFn } from './lib/walk-server';
+import { crackServer } from './lib/crack-server.js';
+import { walkServer, WalkServerProcessFn } from './lib/walk-server.js';
 
 const getHackScript = () => `/${config.folder}/hack.js`;
 

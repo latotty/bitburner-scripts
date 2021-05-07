@@ -1,4 +1,4 @@
-import { execGrow, execWeaken, execHack, getBotnetTargetOpts } from './lib/botnet';
+import { execGrow, execWeaken, execHack, getBotnetTargetOpts } from './lib/botnet.js';
 export async function main(ns) {
     const { runnerServer, targetServer, gapTime } = ns.flags([
         ['runnerServer', ''],

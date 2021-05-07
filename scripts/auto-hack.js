@@ -1,6 +1,6 @@
 import { config } from 'import.js';
-import { crackServer } from './lib/crack-server';
-import { walkServer } from './lib/walk-server';
+import { crackServer } from './lib/crack-server.js';
+import { walkServer } from './lib/walk-server.js';
 const getHackScript = () => `/${config.folder}/hack.js`;
 /* Searches for servers that are hackable,
  * cracks them if you don't have root access,
