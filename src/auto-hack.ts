@@ -1,5 +1,7 @@
 import type { BitBurner as NS, Host } from 'Bitburner';
 import { config } from 'import.js';
+import { crackServer } from './lib/crack-server';
+import { walkServer, WalkServerProcessFn } from './lib/walk-server';
 
 const getHackScript = () => `/${config.folder}/hack.js`;
 
@@ -12,22 +14,12 @@ export const main = async function (ns: NS) {
     ns.disableLog('ALL');
 
     while (true) {
-        findServer({ ns, targetServer: 'home', processFn: ({ ns, server }) => !server.includes(config.serverPrefix) ? hackServer({ ns, server }) : null });
+        walkServer({ ns, targetServer: 'home', processFn: ({ ns, server }) => !server.includes(config.serverPrefix) ? hackServer({ ns, server }) : null });
         await ns.sleep(1000 * 60);
     }
 }
 
-type FindServerProcessFn = (args: { ns: NS, server: Host }) => void;
-const findServer = ({ ns, previousServer, targetServer, processFn }: { ns: NS, targetServer: Host, previousServer?: Host, processFn: FindServerProcessFn }) => {
-    ns.scan(targetServer, true)
-        .filter((server) => server !== (previousServer || targetServer))
-        .forEach((server) => {
-            processFn({ ns, server });
-            findServer({ ns, previousServer: targetServer, targetServer: server, processFn });
-        });
-}
-
-const hackServer: FindServerProcessFn = ({ ns, server }) => {
+const hackServer: WalkServerProcessFn = ({ ns, server }) => {
     if (!isServerHackable(ns, server)) {
         return;
     }
@@ -55,39 +47,3 @@ const hackServer: FindServerProcessFn = ({ ns, server }) => {
 }
 
 const isServerHackable = (ns: NS, server: Host): boolean => crackServer(ns, server) && ns.getServerRequiredHackingLevel(server) <= ns.getHackingLevel();
-
-const crackServer = (ns: NS, server: Host): boolean => {
-    if (ns.hasRootAccess(server)) {
-        return true;
-    }
-
-    let openPorts = 0;
-    if (ns.fileExists('BruteSSH.exe')) {
-        ns.brutessh(server);
-        openPorts++;
-    }
-    if (ns.fileExists('FTPCrack.exe')) {
-        ns.ftpcrack(server);
-        openPorts++;
-    }
-    if (ns.fileExists('relaySMTP.exe')) {
-        ns.relaysmtp(server);
-        openPorts++;
-    }
-    if (ns.fileExists('HTTPWorm.exe')) {
-        ns.httpworm(server);
-        openPorts++;
-    }
-    if (ns.fileExists('SQLInject.exe')) {
-        ns.sqlinject(server);
-        openPorts++;
-    }
-
-    if (ns.getServerNumPortsRequired(server) > openPorts) {
-        return false;
-    }
-
-    ns.nuke(server);
-
-    return true;
-}

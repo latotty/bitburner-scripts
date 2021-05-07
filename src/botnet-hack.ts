@@ -1,27 +1,27 @@
 import type { BitBurner as NS, Host } from 'Bitburner';
 
 export async function main(ns: NS) {
-    const { server, hackTime, windowTime, gapTime, stock } = ns.flags<{
+    const { server, hackTime, cycleTime, gapTime, stock } = ns.flags<{
         server: Host,
         hackTime: number;
-        windowTime: number;
+        cycleTime: number;
         gapTime: number;
         stock: boolean;
     }>([
         ['server', ''],
         ['hackTime', 0],
-        ['windowTime', 0],
+        ['cycleTime', 0],
         ['gapTime', 0],
         ['stock', true]
     ]);
 
-    if (!server || !hackTime || !windowTime) {
-        ns.tprint('Usage: --server=<> --windowTime=<> --hackTime=<> [--stock]');
+    if (!server || !hackTime || !cycleTime) {
+        ns.tprint('Usage: --server=<> --cycleTime=<> --hackTime=<> [--stock]');
         return;
     }
 
     while (true) {
-        await ns.sleep(windowTime - hackTime - gapTime);
+        await ns.sleep(cycleTime - hackTime - gapTime);
         ns.print(['start', server]);
         await ns.hack(server, { stock });
         ns.print(['done', server]);
