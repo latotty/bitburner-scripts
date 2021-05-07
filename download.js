@@ -8,6 +8,8 @@ export async function main(ns) {
         "auto-hack.js",
         "auto-stock.js",
         "autoRemoteHack.js",
+        "botnet-manual.js",
+        "botnet-worker.js",
         "buyHacknet.js",
         "custom-hack.js",
         "dashboard.js",

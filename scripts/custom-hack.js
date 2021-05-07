@@ -11,9 +11,6 @@ export async function main(ns) {
         return;
     }
     ns.disableLog('getServerSecurityLevel');
-    if (serverMoneyThreshold === 0) {
-        return;
-    }
     while (true) {
         if (ns.getServerSecurityLevel(server) > serverSecurityThreshold) {
             await ns.weaken(server, { stock });

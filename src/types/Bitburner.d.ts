@@ -3396,7 +3396,7 @@ declare module "Bitburner" {
          * @ramCost 0 GB
          * @param {string} msg Value to be printed.
          */
-        tprint (msg: string | number | string[] | number[]): void;
+        tprint (msg: string | number | string[] | number[] | unknown): void;
 
         /**
          * Clears the script’s logs.
@@ -3990,6 +3990,8 @@ declare module "Bitburner" {
          * The second element in the array is the amount of RAM that is currently being used on
          * the server (in GB).
          *
+         * @deprecated
+         * 
          * @example
          * ```js
          * res = getServerRam("helios");
@@ -4001,6 +4003,31 @@ declare module "Bitburner" {
          * @returns {[number,number]} Array with total and used memory on the specified server.
          */
         getServerRam (host: Host): [number, number];
+
+        /**
+         * @example
+         * ```js
+         * maxRam = getServerMaxRam("helios"); // returns: 16
+         * print("helios has "+maxRam + "GB");
+         * ```
+         * @ramCost 0.05 GB
+         * @param {string} host Host or IP of target server.
+         * @returns {number} Total ram available on that server. In GB.
+         */
+        getServerMaxRam (host: Host): number;
+
+        
+        /** 
+         * @example
+         * ```js
+         * usedRam = getServerUsedRam("harakiri-sushi"); // returns: 5.6
+         * print("harakiri-sushi uses "+usedRam + "GB");
+         * ```
+         * @ramCost 0.05 GB
+         * @param {string} host Host or IP of target server.
+         * @returns {number} Used ram on that server. In GB.
+         */
+        getServerUsedRam (host: Host): number;
 
         /**
          * Returns a boolean denoting whether or not the specified server exists.
