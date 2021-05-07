@@ -13,12 +13,14 @@ type StockData = {
     shares: number;
     forecast: number;
 }
-const getStockData = (ns: NS): StockData[] => ns.getStockSymbols().map(sym => ({
+const getStockData = (ns: NS, sym: StockSymbol): StockData => ({
     sym,
     price: ns.getStockPrice(sym),
     shares: ns.getStockPosition(sym)[0],
     forecast: ns.getStockForecast(sym),
-}));
+});
+
+const getAllStockData = (ns: NS) => ns.getStockSymbols().map(s => getStockData(ns, s));
 
 const getSortedStockSymbols = (ns: NS): StockSymbol[] => ns.getStockSymbols().sort((a, b) => ns.getStockForecast(b) - ns.getStockForecast(a));
 
@@ -29,24 +31,28 @@ export async function main(ns: NS) {
 
     while (true) {
         // Sell bad shares
-        const myStocks = getStockData(ns).filter(s => s.shares > 0);
+        const myStocks = getAllStockData(ns).filter(s => s.shares > 0);
         for (const myStock of myStocks) {
-            const corpus = getStockData(ns).filter(s => s.shares > 0).reduce((acc, s) => acc + s.shares * s.price, ns.getServerMoneyAvailable("home"));
-            if (myStock.forecast < SELL_LIMIT || (rapid && ns.getStockSaleGain(myStock.sym, myStock.shares, 'long') > corpus * 0.05)) {
+            const corpus = getAllStockData(ns).filter(s => s.shares > 0).reduce((acc, s) => acc + s.shares * s.price, ns.getServerMoneyAvailable("home"));
+            if (rapid && ns.getStockSaleGain(myStock.sym, myStock.shares, 'long') > corpus * 0.05) {
+                ns.print(`Rapid profit on ${myStock.sym}: ${ns.getStockSaleGain(myStock.sym, myStock.shares, 'long')}`);
+                ns.sellStock(myStock.sym, myStock.shares);
+            } else if (myStock.forecast < SELL_LIMIT) {
                 ns.print("Stock " + myStock.sym + " no longer valuable. Selling.");
                 ns.sellStock(myStock.sym, myStock.shares);
             }
         }
         
         let cashToSpend = ns.getServerMoneyAvailable("home");
+
         for (const stockSymbol of getSortedStockSymbols(ns)) {
-            const stockData = getStockData(ns);
-            const corpus = getStockData(ns).filter(s => s.shares > 0).reduce((acc, s) => acc + s.shares * s.price, ns.getServerMoneyAvailable("home"));
+            const allStockData = getAllStockData(ns);
+            const corpus = allStockData.filter(s => s.shares > 0).reduce((acc, s) => acc + s.shares * s.price, ns.getServerMoneyAvailable("home"));
             if(cashToSpend <= 100 * COMISSION || cashToSpend <= corpus * keep) {
                 break;
             }
             ns.print("Have " + cashToSpend + " cash to spend.");
-            const stockToBuy = stockData.find(s => s.sym === stockSymbol)!;
+            const stockToBuy = allStockData.find(s => s.sym === stockSymbol)!;
 
             if (stockToBuy.forecast < BUY_LIMIT) {
                 continue;
