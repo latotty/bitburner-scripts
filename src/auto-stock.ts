@@ -27,17 +27,13 @@ const getSortedStockSymbols = (ns: NS): StockSymbol[] => ns.getStockSymbols().so
 export async function main(ns: NS) {
     ns.disableLog("ALL");
 
-    const { keep, rapid } = ns.flags<{ keep: number, rapid: boolean }>([['keep', 0.1], ['rapid', false]]);
+    const { keep } = ns.flags<{ keep: number }>([['keep', 0.1]]);
 
     while (true) {
         // Sell bad shares
         const myStocks = getAllStockData(ns).filter(s => s.shares > 0);
         for (const myStock of myStocks) {
-            const corpus = getAllStockData(ns).filter(s => s.shares > 0).reduce((acc, s) => acc + s.shares * s.price, ns.getServerMoneyAvailable("home"));
-            if (rapid && ns.getStockSaleGain(myStock.sym, myStock.shares, 'long') > corpus * 0.05) {
-                ns.print(`Rapid profit on ${myStock.sym}: ${ns.getStockSaleGain(myStock.sym, myStock.shares, 'long')}`);
-                ns.sellStock(myStock.sym, myStock.shares);
-            } else if (myStock.forecast < SELL_LIMIT) {
+            if (myStock.forecast < SELL_LIMIT) {
                 ns.print("Stock " + myStock.sym + " no longer valuable. Selling.");
                 ns.sellStock(myStock.sym, myStock.shares);
             }
