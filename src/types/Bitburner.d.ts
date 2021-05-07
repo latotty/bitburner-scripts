@@ -4493,5 +4493,7 @@ declare module "Bitburner" {
          * @returns {object} Object containing the current BitNode multipliers.
          */
         getBitNodeMultipliers (url: string, target: string, host: string): BitNodeMultipliers;
+
+        flags <T extends Record<string, any> = Record<string, any>>(flags: [keyof T, string | boolean | number | string[]][]): T & { _: string[] }; 
     }
 }

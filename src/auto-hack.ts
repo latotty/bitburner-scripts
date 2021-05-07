@@ -12,7 +12,7 @@ export const main = async function (ns: NS) {
     ns.disableLog('ALL');
 
     while (true) {
-        findServer({ ns, targetServer: 'home', processFn: hackServer });
+        findServer({ ns, targetServer: 'home', processFn: ({ ns, server }) => !server.includes(config.serverPrefix) ? hackServer({ ns, server }) : null });
         await ns.sleep(1000 * 60);
     }
 }
