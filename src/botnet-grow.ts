@@ -20,15 +20,11 @@ export async function main(ns: NS) {
         return;
     }
 
-    let calculatedGrowTime = growTime;
-
     while (true) {
-        await ns.sleep(windowTime - calculatedGrowTime - gapTime * 2);
-        // const start = Date.now();
-        ns.tprint(['start', server]);
+        await ns.sleep(windowTime - growTime - gapTime * 2);
+        ns.print(['start', server]);
         await ns.grow(server, { stock });
-        ns.tprint(['done', server]);
-        // calculatedGrowTime = Date.now() - start;
+        ns.print(['done', server]);
         await ns.sleep(gapTime);
     }
 }

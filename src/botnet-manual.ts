@@ -41,7 +41,7 @@ export async function main(ns: NS) {
 
     const windowTime = Math.max(hackTime + TIME_GAP_MS, growTime + TIME_GAP_MS * 2, weakenTime);
 
-    const totalScriptRam = workerScriptsRam.hack * hackThreads + workerScriptsRam.grow * growthThreads + workerScriptsRam.weaken * weakenThreads;
+    const totalScriptRam = Math.ceil(workerScriptsRam.hack * hackThreads) + Math.ceil(workerScriptsRam.grow * growthThreads) + Math.ceil(workerScriptsRam.weaken * weakenThreads);
 
     const freeRam = ns.getServerMaxRam(runnerServer) - ns.getServerUsedRam(runnerServer);
 

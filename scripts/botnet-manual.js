@@ -28,7 +28,7 @@ export async function main(ns) {
     const growTime = ns.getGrowTime(targetServer) * 1000;
     const weakenTime = ns.getWeakenTime(targetServer) * 1000;
     const windowTime = Math.max(hackTime + TIME_GAP_MS, growTime + TIME_GAP_MS * 2, weakenTime);
-    const totalScriptRam = workerScriptsRam.hack * hackThreads + workerScriptsRam.grow * growthThreads + workerScriptsRam.weaken * weakenThreads;
+    const totalScriptRam = Math.ceil(workerScriptsRam.hack * hackThreads) + Math.ceil(workerScriptsRam.grow * growthThreads) + Math.ceil(workerScriptsRam.weaken * weakenThreads);
     const freeRam = ns.getServerMaxRam(runnerServer) - ns.getServerUsedRam(runnerServer);
     if (freeRam < totalScriptRam) {
         ns.tprint(`Not enough free ram [${freeRam} Gb] on ${runnerServer}, required: ${totalScriptRam} Gb`);

@@ -20,15 +20,11 @@ export async function main(ns: NS) {
         return;
     }
 
-    let calculatedHackTime = hackTime;
-
     while (true) {
-        await ns.sleep(windowTime - calculatedHackTime - gapTime);
-        // const start = Date.now();
-        ns.tprint(['start', server]);
+        await ns.sleep(windowTime - hackTime - gapTime);
+        ns.print(['start', server]);
         await ns.hack(server, { stock });
-        ns.tprint(['done', server]);
-        // calculatedHackTime = Date.now() - start;
+        ns.print(['done', server]);
         await ns.sleep(2 * gapTime);
     }
 }

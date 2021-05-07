@@ -10,13 +10,10 @@ export async function main(ns) {
         ns.tprint('Usage: --server=<> --windowTime=<> --weakenTime=<> [--stock]');
         return;
     }
-    let calculatedWeakenTime = weakenTime;
     while (true) {
-        await ns.sleep(windowTime - calculatedWeakenTime);
-        // const start = Date.now();
-        ns.tprint(['start', server]);
+        await ns.sleep(windowTime - weakenTime);
+        ns.print(['start', server]);
         await ns.weaken(server, { stock });
-        ns.tprint(['done', server]);
-        // calculatedWeakenTime = Date.now() - start;
+        ns.print(['done', server]);
     }
 }
