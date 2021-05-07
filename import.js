@@ -7,7 +7,7 @@ export const config = {
    * This will import all files listed in importFiles.
    */
   export async function main(ns) {
-    const downloadFileName = `${config.rootUrl}download.js`;
+    const downloadFileName = `${config.rootUrl}download.js?t=${Date.now()}`;
     await ns.wget(downloadFileName, `/${getFolder()}/download.js`);
     ns.run(`/${getFolder()}/download.js`);
   }
