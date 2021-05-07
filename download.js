@@ -6,8 +6,8 @@ export async function main(ns) {
 
     const files = [
         "auto-hack.js",
+        "auto-stock.js",
         "autoRemoteHack.js",
-        "autoStock.js",
         "buyHacknet.js",
         "dashboard.js",
         "hack.js",

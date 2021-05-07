@@ -11,7 +11,7 @@ async function runCommand(ns, command) {
     case 'autoRemoteHack':
     case 'dashboard':
     case 'purchaseServers':
-    case 'autoStock':
+    case 'auto-stock':
       ns.run(`/${getFolder()}/${command}.js`);
       break;
     case 'sudo autohack':
