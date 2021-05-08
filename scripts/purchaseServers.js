@@ -1,5 +1,3 @@
-import { getServerPrefix } from 'import.js';
-
 let maxServers;
 let servers;
 
@@ -55,7 +53,7 @@ function buyServer(ns, ram) {
         let success = removeWeakestServer(ns, ram);
         if (!success) { return false; }
     }
-    let server = ns.purchaseServer(`${getServerPrefix()}-${ram}GB`, ram);
+    let server = ns.purchaseServer(`LLWZ-${ram}GB`, ram);
     servers.push(server);
     ns.tprint(`Purchased ${server}: ${ram}GB`);
     return true;

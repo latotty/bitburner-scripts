@@ -1,29 +1,24 @@
-import { config } from 'import.js';
-
 export async function main(ns) {
-    const folder = config.folder;
-    const urlPrefix = config.rootUrl;
+    const { rootUrl } = ns.flags([['rootUrl', 'https://raw.githubusercontent.com/latotty/bitburner-scripts/main/']]); 
+    const folder = '/scripts';
 
     const files = [
-        "auto-hack.js",
-        "auto-stock.js",
         "autoRemoteHack.js",
-        "botnet-grow.js",
-        "botnet-hack.js",
-        "botnet-manual.js",
-        "botnet-status.js",
-        "botnet-weaken.js",
         "buyHacknet.js",
-        "custom-hack.js",
         "dashboard.js",
         "hack.js",
         "hax.js",
-        "lib/botnet.js",
-        "lib/crack-server.js",
-        "lib/walk-server.js",
-        "minGrow.js",
-        "minHack.js",
-        "minWeak.js",
+        "llwz/auto-hack.js",
+        "llwz/auto-stock.js",
+        "llwz/botnet-grow.js",
+        "llwz/botnet-hack.js",
+        "llwz/botnet-manual.js",
+        "llwz/botnet-status.js",
+        "llwz/botnet-weaken.js",
+        "llwz/custom-hack.js",
+        "llwz/lib/botnet.js",
+        "llwz/lib/crack-server.js",
+        "llwz/lib/walk-server.js",
         "purchaseServers.js",
         "remoteHack.js",
         "serverStatus.js"
@@ -31,7 +26,7 @@ export async function main(ns) {
     
     let filesImported = true;
     for (let file of files) {
-        const remoteFileName = `${urlPrefix}scripts/${file}?t=${Date.now()}`;
+        const remoteFileName = `${rootUrl}scripts/${file}?t=${Date.now()}`;
         const result = await ns.wget(remoteFileName, `/${folder}/${file}`);
         filesImported = filesImported && result;
         ns.tprint(`File: ${file}: ${result ? '✔️' : '❌'}`);
