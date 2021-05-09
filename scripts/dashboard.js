@@ -1,4 +1,3 @@
-import { getFolder, getServerPrefix } from 'import.js';
 import { serverHackStatus, serverReport } from '/scripts/serverStatus.js';
 
 /*
@@ -11,7 +10,7 @@ export async function main(ns) {
 
 function findServer(ns, startServer, targetServer, i) {
     let servers = ns.scan(targetServer, true)
-        .filter((server) => server !== startServer && !server.includes(getServerPrefix()));
+        .filter((server) => server !== startServer && !server.includes('LLWZ'));
     servers.forEach((server) => {
         ns.tprint(`😹${'>'.repeat(i)}`);
         serverReport(ns, server);

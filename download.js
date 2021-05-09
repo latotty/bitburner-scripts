@@ -3,11 +3,9 @@ export async function main(ns) {
     const folder = 'scripts';
 
     const files = [
-        "autoRemoteHack.js",
         "buyHacknet.js",
         "dashboard.js",
         "hack.js",
-        "hax.js",
         "llwz/auto-hack.js",
         "llwz/auto-stock.js",
         "llwz/botnet-grow.js",
@@ -20,7 +18,6 @@ export async function main(ns) {
         "llwz/lib/crack-server.js",
         "llwz/lib/walk-server.js",
         "purchaseServers.js",
-        "remoteHack.js",
         "serverStatus.js"
     ];
     
