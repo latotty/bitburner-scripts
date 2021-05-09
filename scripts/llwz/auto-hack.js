@@ -1,5 +1,5 @@
-import { crackServer } from './lib/crack-server.js';
-import { walkServer } from './lib/walk-server.js';
+import { crackServer } from '/scripts/llwz/lib/crack-server.js';
+import { walkServer } from '/scripts/llwz/lib/walk-server.js';
 const getHackScript = () => `/scripts/hack.js`;
 /* Searches for servers that are hackable,
  * cracks them if you don't have root access,
