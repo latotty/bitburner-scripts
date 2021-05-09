@@ -1,6 +1,6 @@
 export async function main(ns) {
     const { rootUrl } = ns.flags([['rootUrl', 'https://raw.githubusercontent.com/latotty/bitburner-scripts/main/']]); 
-    const folder = '/scripts';
+    const folder = 'scripts';
 
     const files = [/* FILES */    ];
     
