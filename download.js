@@ -16,6 +16,7 @@ export async function main(ns) {
         "llwz/custom-hack.js",
         "llwz/lib/botnet.js",
         "llwz/lib/crack-server.js",
+        "llwz/lib/human-time.js",
         "llwz/lib/walk-server.js",
         "purchaseServers.js",
         "serverStatus.js"

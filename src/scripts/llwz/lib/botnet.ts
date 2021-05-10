@@ -1,4 +1,5 @@
 import type { BitBurner as NS, Host } from 'Bitburner';
+import { crackServer } from '/scripts/llwz/lib/crack-server.js';
 
 const getWorkerScripts = () => ({
     weaken: `/scripts/llwz/botnet-weaken.js`,
@@ -19,6 +20,18 @@ export type BotnetTargetOpts = {
     targetServer: Host;
     gapTime: number;
 
+    serverMaxMoney: number;
+    serverGrowth: number;
+    serverMinSecurity: number;
+    serverSecurity: number;
+    serverRequiredHackingLevel: number;
+    hasRoot: boolean;
+    canHack: boolean;
+
+    potentialMoney: number;
+    moneyPerSec: number;
+    moneyPerRam: number;
+
     hackThreads: number;
     growThreads: number;
     weakenThreads: number;
@@ -36,7 +49,7 @@ export type BotnetTargetOpts = {
     totalScriptRam: number;
 };
 
-export const getBotnetTargetOpts = (ns: NS, targetServer: Host, { gapTime = 0, harvestPercent = 40, growthAmount = 2 }: { gapTime?: number, harvestPercent?: number, growthAmount?: number } = {}) => {
+export const getBotnetTargetOpts = (ns: NS, targetServer: Host, { gapTime = 0, harvestPercent = 40, growthAmount = 2 }: { gapTime?: number, harvestPercent?: number, growthAmount?: number } = {}): BotnetTargetOpts => {
     const workerScriptsRam = getWorkerScriptRam(ns);
 
     const hackThreads = Math.max(1, Math.floor(harvestPercent / ns.hackAnalyzePercent(targetServer)));
@@ -58,6 +71,9 @@ export const getBotnetTargetOpts = (ns: NS, targetServer: Host, { gapTime = 0, h
     const serverMaxMoney = ns.getServerMaxMoney(targetServer);
     const potentialMoney = serverMaxMoney * (harvestPercent / 100);
 
+    const serverRequiredHackingLevel = ns.getServerRequiredHackingLevel(targetServer);
+    const hasRoot = crackServer(ns, targetServer);
+
     return {
         targetServer,
         gapTime,
@@ -66,6 +82,9 @@ export const getBotnetTargetOpts = (ns: NS, targetServer: Host, { gapTime = 0, h
         serverGrowth: ns.getServerGrowth(targetServer),
         serverMinSecurity: ns.getServerMinSecurityLevel(targetServer),
         serverSecurity: ns.getServerSecurityLevel(targetServer),
+        serverRequiredHackingLevel,
+        hasRoot,
+        canHack: hasRoot && ns.getHackingLevel() >= serverRequiredHackingLevel,
 
         potentialMoney,
         moneyPerSec: potentialMoney / (cycleTime / 1000),

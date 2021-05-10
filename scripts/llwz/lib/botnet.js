@@ -1,3 +1,4 @@
+import { crackServer } from '/scripts/llwz/lib/crack-server.js';
 const getWorkerScripts = () => ({
     weaken: `/scripts/llwz/botnet-weaken.js`,
     hack: `/scripts/llwz/botnet-hack.js`,
@@ -26,6 +27,8 @@ export const getBotnetTargetOpts = (ns, targetServer, { gapTime = 0, harvestPerc
     const totalScriptRam = hackRam + growRam + weakenRam;
     const serverMaxMoney = ns.getServerMaxMoney(targetServer);
     const potentialMoney = serverMaxMoney * (harvestPercent / 100);
+    const serverRequiredHackingLevel = ns.getServerRequiredHackingLevel(targetServer);
+    const hasRoot = crackServer(ns, targetServer);
     return {
         targetServer,
         gapTime,
@@ -33,6 +36,9 @@ export const getBotnetTargetOpts = (ns, targetServer, { gapTime = 0, harvestPerc
         serverGrowth: ns.getServerGrowth(targetServer),
         serverMinSecurity: ns.getServerMinSecurityLevel(targetServer),
         serverSecurity: ns.getServerSecurityLevel(targetServer),
+        serverRequiredHackingLevel,
+        hasRoot,
+        canHack: hasRoot && ns.getHackingLevel() >= serverRequiredHackingLevel,
         potentialMoney,
         moneyPerSec: potentialMoney / (cycleTime / 1000),
         moneyPerRam: potentialMoney / totalScriptRam,
